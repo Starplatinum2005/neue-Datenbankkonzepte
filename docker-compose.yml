@@ -1,4 +1,5 @@
-version: '3.8'
+# User Story 15
+version: '3.8' # User Story 6
 
 services:
   mongodb:
@@ -6,12 +7,12 @@ services:
     container_name: pim_database
     restart: always
     ports:
-      - "27017:27017" # Der Standard-Port von MongoDB
-    environment:
+      - "27017:27017"
+    environment: # User Story 7
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
-      - mongodb_data:/data/db # Erfüllt deine Must-Story zur Datenpersistenz!
+      - mongodb_data:/data/db # Persistente Speicherung der Daten
 
 volumes:
   mongodb_data:

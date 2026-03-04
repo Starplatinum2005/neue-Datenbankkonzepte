@@ -19,7 +19,7 @@ Folge diesen Schritten, um die API und die Datenbank auf deinem lokalen Rechner 
 ### Schritt 1: Umgebungsvariablen (.env) anlegen
 Aus Sicherheitsgründen sind die Datenbank-Passwörter nicht im Code hinterlegt. Erstelle im Hauptverzeichnis des Projekts eine Datei namens `.env` und füge folgende Zeilen ein:
 
-```env
+```bash
 MONGO_INITDB_ROOT_USERNAME=admin
 MONGO_INITDB_ROOT_PASSWORD=supergeheim123
 
@@ -32,12 +32,13 @@ Navigiere im Terminal zum Hauptverzeichnis des Projekts und führe den folgenden
 docker-compose up -d
 ```
 Dieser Befehl startet den MongoDB-Container im Hintergrund. Die Datenbank ist nun unter `mongodb://localhost:27017` erreichbar.
+
 ### Schritt 3: Python-Abhängigkeiten installieren
 Erstelle ein virtuelles Python-Umfeld und installiere die benötigten Pakete:
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Für Windows: venv\Scripts\activate
+Für Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -47,8 +48,17 @@ Starte die FastAPI-Anwendung mit folgendem Befehl:
 ```bash
 uvicorn main:app --reload
 ```
-Die API ist nun unter `http://localhost:8000` erreichbar. Du kannst die interaktive Dokumentation unter `http://localhost:8000/docs` aufrufen.
+
+- Die API ist nun unter `http://localhost:8000` erreichbar. 
+- interaktive Dokumentation unter `http://localhost:8000/docs` aufrufbar. #User Story19
+
+### Daten-Seed ausführen
+- Seed.py ausführen im venv
+```bash
+python seed.py
+```
 
 ### Schritt 5: API-Endpunkte testen
 Du kannst die API-Endpunkte entweder über die interaktive Dokumentation oder mit Tools wie Postman oder curl testen. Hier sind einige Beispiel-Endpunkte:
 - **GET** `/products/` - Alle Produkte abrufen
+
