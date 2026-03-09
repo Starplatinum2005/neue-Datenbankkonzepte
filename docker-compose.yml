@@ -14,5 +14,18 @@ services:
     volumes:
       - mongodb_data:/data/db # Persistente Speicherung der Daten
 
+  api: # User Story 25
+    build: . 
+    container_name: pim_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_HOST=mongodb
+    depends_on:
+      - mongodb
+
 volumes:
   mongodb_data:

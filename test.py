@@ -177,11 +177,3 @@ def produkt_loeschen(produkt_id: str):
     if ergebnis.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Produkt zum Löschen nicht gefunden")
     return {"nachricht": "Produkt erfolgreich gelöscht!"}
-
-@app.delete("/produkte", tags=["4. DELETE - Löschen"])
-def alle_produkte_loeschen():
-    ergebnis = db["produkte"].delete_many({})
-    
-    return {
-        "nachricht": f"Achtung: Alle {ergebnis.deleted_count} Produkte wurden unwiderruflich gelöscht!"
-    }

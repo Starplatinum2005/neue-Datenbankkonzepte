@@ -1,64 +1,63 @@
+
 # neue-Datenbankkonzepte
 Gruppennummer A1
 
 ## PIM System API (Product Information Management)
 
-Dieses Projekt ist eine REST-API für ein Product Information Management System, entwickelt mit **Python (FastAPI)** und **MongoDB**. Die Datenbank wird als Docker-Container bereitgestellt, um eine einheitliche und persistente Entwicklungsumgebung zu garantieren.
+- Rest-API für ein Product Information Management System
+
+- Entwickelt mit Python (FastAPI) und MongoDB
+
+- Datenbank und API als Docker-Container bereitgestellt
 
 ## Voraussetzungen
-Bevor du das Projekt startest, stelle sicher, dass Folgendes auf deinem Rechner installiert ist:
-- **Python 3.10+** (inklusive `pip`)
-- **Docker Desktop** (muss im Hintergrund laufen)
+- gesamtes System dockerisiert, keine lokale Python-Installation nötig
 
----
+- Docker Desktop muss installiert und im Hintergrund aktiv sein
 
-##  Lokales Setup & Startanleitung
-
-Folge diesen Schritten, um die API und die Datenbank auf deinem lokalen Rechner zu starten:
+## Lokales Setup & Startanleitung
 
 ### Schritt 1: Umgebungsvariablen (.env) anlegen
-Aus Sicherheitsgründen sind die Datenbank-Passwörter nicht im Code hinterlegt. Erstelle im Hauptverzeichnis des Projekts eine Datei namens `.env` und füge folgende Zeilen ein:
+- DB passwörter nicht im Code hinterlegt, sondern über .env Datei ( User Story) 
+- `.env` im Hauptverzeichnis erstellen mit folgenden Zeilen:
 
 ```bash
 MONGO_INITDB_ROOT_USERNAME=admin
 MONGO_INITDB_ROOT_PASSWORD=supergeheim123
-
 ```
 
 ### Schritt 2: Docker-Container für MongoDB starten
-Navigiere im Terminal zum Hauptverzeichnis des Projekts und führe den folgenden Befehl aus, um den MongoDB-Container zu starten:
+- Terminal öffnen, zum Hauptverzeichnis navigieren und folgenden Befehl ausführen:
 
 ```bash
-docker-compose up -d
-```
-Dieser Befehl startet den MongoDB-Container im Hintergrund. Die Datenbank ist nun unter `mongodb://localhost:27017` erreichbar.
-
-### Schritt 3: Python-Abhängigkeiten installieren
-Erstelle ein virtuelles Python-Umfeld und installiere die benötigten Pakete:
-
-```bash
-python -m venv venv
-Für Windows: venv\Scripts\activate
-pip install -r requirements.txt
+docker-compose up -d --build
 ```
 
-### Schritt 4: API starten
-Starte die FastAPI-Anwendung mit folgendem Befehl:
+- startet sowohl MongoDB als auch die FastAPI-Anwendung im Hintergrund
 
-```bash
-uvicorn main:app --reload
-```
+### Schritt 3: API & Dokumentation aufrufen
 
-- Die API ist nun unter `http://localhost:8000` erreichbar. 
-- interaktive Dokumentation unter `http://localhost:8000/docs` aufrufbar. #User Story19
+- API ist unter `http://localhost:8000` erreichbar nach aktivierung der Container
 
-### Daten-Seed ausführen
+- interaktive Dokumentation (Swagger UI) unter `http://localhost:8000/docs` aufrufbar
+
+## Daten-Seed ausführen
 - Seed.py ausführen im venv
+
 ```bash
-python seed.py
+docker exec -it pim_api python seed.py
 ```
 
-### Schritt 5: API-Endpunkte testen
-Du kannst die API-Endpunkte entweder über die interaktive Dokumentation oder mit Tools wie Postman oder curl testen. Hier sind einige Beispiel-Endpunkte:
-- **GET** `/products/` - Alle Produkte abrufen
+- mögl. URLS zum testen nach seed datei
+```bash
+http://localhost:8000/produkte?q=Kaffee
 
+http://localhost:8000/produkte?kategorie=Technik&limit=2
+
+http://localhost:8000/produkte?felder=name,preis
+
+http://localhost:8000/statistiken/kategorien
+```
+
+## Hinweise
+- alle User Stories wurde implementiert aber es besteht Möglichkeit, dass nicht alle gekenzeichnet wurde
