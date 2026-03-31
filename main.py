@@ -72,6 +72,8 @@ def produkte_abrufen(
     if felder:
         projektion = {feld.strip(): 1 for feld in felder.split(",")}
 
+    gesamt_anzahl = db["produkte"].count_documents(such_filter)
+
     cursor = db["produkte"].find(such_filter, projektion)
 
     if sort_by:
@@ -85,7 +87,16 @@ def produkte_abrufen(
         produkt["_id"] = str(produkt["_id"])
         produkte_liste.append(produkt)
 
-    return produkte_liste
+    if gesamt_anzahl == 0:
+        raise HTTPException(status_code=404, detail="Keine Produkte gefunden")
+
+    return {
+        "gesamt": gesamt_anzahl,
+        "limit": limit,
+        "offset": offset,
+        "seiten_gesamt": -(-gesamt_anzahl // limit),
+        "ergebnisse": produkte_liste
+    }
 
 # User Story 1
 @app.get("/produkte/{produkt_id}", tags=["1. GET - Abrufen"]) 
@@ -113,6 +124,32 @@ def statistiken_kategorien():
     for eintrag in cursor:
         kategorie_name = eintrag["_id"] if eintrag["_id"] else "Unkategorisiert"
         statistik_liste.append({"kategorie": kategorie_name, "anzahl": eintrag["anzahl_produkte"]})
+    return statistik_liste
+
+@app.get("/statistiken/preise", tags=["1. GET - Abrufen"])
+def statistiken_preise():
+    pipeline = [
+        {"$match": {"preis": {"$exists": True}, "archiviert": {"$ne": True}}},
+        {"$group": {
+            "_id": "$kategorie",
+            "durchschnittspreis": {"$avg": "$preis"},
+            "min_preis": {"$min": "$preis"},
+            "max_preis": {"$max": "$preis"},
+            "anzahl_mit_preis": {"$sum": 1}
+        }},
+        {"$sort": {"durchschnittspreis": -1}}
+    ]
+    cursor = db["produkte"].aggregate(pipeline)
+    statistik_liste = []
+    for eintrag in cursor:
+        kategorie_name = eintrag["_id"] if eintrag["_id"] else "Unkategorisiert"
+        statistik_liste.append({
+            "kategorie": kategorie_name,
+            "durchschnittspreis": round(eintrag["durchschnittspreis"], 2),
+            "min_preis": eintrag["min_preis"],
+            "max_preis": eintrag["max_preis"],
+            "anzahl": eintrag["anzahl_mit_preis"]
+        })
     return statistik_liste
 
 # User Story 3 und 22 (Bilder links möglich)
